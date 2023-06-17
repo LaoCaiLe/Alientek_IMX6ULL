@@ -1586,7 +1586,7 @@ endif
 
 export Output := ./out
 
-run_cp_outfile:
+do_cp_outfile:
 	mkdir -p $(Output)
 	cp -pf ./arch/arm/boot/zImage $(Output)
 	cp -pf ./arch/arm/boot/dts/imx6ull-14x14-evk.dtb $(Output)
