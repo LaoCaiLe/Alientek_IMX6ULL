@@ -136,7 +136,7 @@
 	"fdt_file=imx6ull-14x14-evk.dtb\0" \
 	"fdt_addr=0x83000000\0" \
 	"boot_fdt=try\0" \
-	"bootargs=console=ttymxc0,115200 root=/dev/mmcblklp2 rootwait rw\0"\
+	"bootargs=console=ttymxc0,115200 root=/dev/mmcblk0p2 rootwait rw\0"\
 	"ip_dyn=yes\0" \
 	"panel=TFT43AB\0" \
 	"mmcdev="__stringify(CONFIG_SYS_MMC_ENV_DEV)"\0" \
