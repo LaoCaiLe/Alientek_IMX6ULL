@@ -1,0 +1,29 @@
+# temp file
+*.log
+*.cache
+*.diff
+*.patch
+*.tmp
+
+# system ignore
+.DS_Store
+Thumbs.db
+
+
+out/
+*.o
+*.o.d
+*.o.cmd
+*modules.builtin
+*modules.order
+*built-in.a
+*a.cmd
+*.ko
+*.ko.cmd
+*.mod.c
+*dtb.cmd
+*.cmd
+*.System.map
+.config*
+*dtb*
+*.tmp*
