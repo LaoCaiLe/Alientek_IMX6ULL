@@ -94,7 +94,7 @@
 		led1{
 			label = "sys-led";
 			gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
-			linux,default-trigger = "heartbeat";
+			linux,default-trigger = "default-on";
 			default-state = "on";
 		};
 
@@ -103,6 +103,52 @@
 			gpios = <&gpio5 1 GPIO_ACTIVE_LOW>;
 			default-state = "off";
 		};
+	};
+
+	beep {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "atkalpha-beep";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_beep>;
+		beep-gpio = <&gpio5 1 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+	};
+
+	alphaled {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "atkalpha-led";
+		status = "okay";
+		reg = < 0X020C406C 0X04 /* CCM_CCGR1_BASE */
+				0X020E0068 0X04 /* SW_MUX_GPIO1_IO03_BASE */
+				0X020E02F4 0X04 /* SW_PAD_GPIO1_IO03_BASE */
+				0X0209C000 0X04 /* GPIO1_DR_BASE */
+				0X0209C004 0X04 >; /* GPIO1_GDIR_BASE */
+	};
+
+	key {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "atkalpha-key";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_key>;
+		key-gpio = <&gpio1 18 GPIO_ACTIVE_LOW>; /* KEY0 */
+		interrupt-parent = <&gpio1>;
+		interrupts = <18 IRQ_TYPE_EDGE_BOTH>; /* FALLING RISING */
+		status = "okay";
+	};
+
+	gpio-keys {
+		compatible = "gpio-keys";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		autorepeat;
+		key0 {
+		label = "GPIO Key Enter";
+		linux,code = <KEY_ENTER>;
+		gpios = <&gpio1 18 GPIO_ACTIVE_LOW>;
+	};
 	};
 
 	sound {
@@ -297,6 +343,17 @@
 			};
 		};
 	};
+	gt9147:gt9147@14 {
+		compatible = "goodix,gt9147", "goodix,gt9xx";
+		reg = <0x14>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_tsc>;
+	   	interrupt-parent = <&gpio1>;
+		interrupts = <9 0>;
+		reset-gpios = <&gpio5 9 GPIO_ACTIVE_LOW>;
+		interrupt-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
+		status = "okay";
+	};
 };
 
 &iomuxc {
@@ -461,6 +518,8 @@
 				MX6UL_PAD_GPIO1_IO02__GPIO1_IO02	0xb0
 				MX6UL_PAD_GPIO1_IO03__GPIO1_IO03	0xb0
 				MX6UL_PAD_GPIO1_IO04__GPIO1_IO04	0xb0
+				MX6UL_PAD_SNVS_TAMPER9__GPIO5_IO09 0x10B0 /* TSC_RST */
+				MX6UL_PAD_GPIO1_IO09__GPIO1_IO09 0x10B0   /* TSC_INT */
 			>;
 		};
 
@@ -583,6 +642,18 @@
 				MX6UL_PAD_LCD_RESET__WDOG1_WDOG_ANY    0x30b0
 			>;
 		};
+
+		pinctrl_key: keygrp {
+			fsl,pins = <
+				MX6UL_PAD_UART1_CTS_B__GPIO1_IO18   0xF080 /* KEY0 */
+			>;
+		};
+
+		pinctrl_beep: beepgrp {
+			fsl,pins = <
+				MX6ULL_PAD_SNVS_TAMPER1__GPIO5_IO01	0x10B0
+			>;
+		};
 	};
 };
 
@@ -624,11 +695,6 @@
 				>;
 			};
 
-        pinctrl_beep: beep {
-			fsl,pins = <
-				MX6ULL_PAD_SNVS_TAMPER1__GPIO5_IO01	0x17059
-			>;
-		};
         };
 };
 
