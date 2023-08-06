@@ -205,11 +205,9 @@
 			"fi;\0" \
 
 #define CONFIG_BOOTCOMMAND \
-	   "usb start 1; "\
-	   "fatls usb 0:1; "\
-	   "run loadimage_usb; "\
-	   "run loadfdt_usb; "\
-	   "bootz ${loadaddr} - ${fdt_addr};"
+	   "tftp $loadaddr $image; "\
+	   "tftp $fdt_addr $fdt_file; "\
+	   "bootz $loadaddr - $fdt_addr; "
 #endif
 
 /* Miscellaneous configurable options */
